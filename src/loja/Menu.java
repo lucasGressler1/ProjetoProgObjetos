@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 
 public class Menu {
@@ -112,7 +114,7 @@ public class Menu {
             System.out.println("│    Menu Principal:                          │");
             System.out.println("│    1 - Menu Administrador                   │");
             System.out.println("│    2 - Menu Cliente                         │");
-            System.out.println("│    0 - Sair                                 │");
+            System.out.println("│    0 - Sair e salvar (gson)                 │");
             System.out.println("└─────────────────────────────────────────────┘");
             opcao = scan.nextInt();
             scan.nextLine();
@@ -139,8 +141,8 @@ public class Menu {
         do {
             System.out.println("┌─────────────────────────────────────────────┐");
             System.out.println("│    Menu Administrador:                      │");
-            System.out.println("│    1 - Cadastros de Fornecedores            │");
-            System.out.println("│    2 - Cadastro de Produtos                 │");
+            System.out.println("│    1 - menu Fornecedores            	      │");
+            System.out.println("│    2 - menu Produtos                        │");
             System.out.println("│    3 - Manutenção de Estoque                │");
             System.out.println("│    0 - Voltar                               │");
             System.out.println("└─────────────────────────────────────────────┘");
@@ -171,12 +173,12 @@ public class Menu {
 
         do {
             System.out.println("┌─────────────────────────────────────────────┐");
-            System.out.println("│    Menu de Fornecedores:                │");
-            System.out.println("│    1 - Cadastrar Fornecedor             │");
-            System.out.println("│    2 - Alterar Fornecedor               │");
-            System.out.println("│    3 - Excluir Fornecedor               │");
-            System.out.println("│    4 - Consultar Fornecedor             │");
-            System.out.println("│    0 - Voltar                           │");
+            System.out.println("│    Menu de Fornecedores:                    │");
+            System.out.println("│    1 - Cadastrar Fornecedor                 │");
+            System.out.println("│    2 - Alterar Fornecedor                   │");
+            System.out.println("│    3 - Excluir Fornecedor                   │");
+            System.out.println("│    4 - Consultar Fornecedor                 │");
+            System.out.println("│    0 - Voltar                               │");
             System.out.println("└─────────────────────────────────────────────┘");
             opcao = scan.nextInt();
             scan.nextLine();
@@ -215,7 +217,6 @@ public class Menu {
     }
     
     public void cadastraFornecedor(Scanner scan) {
-    	listaFornecedores();
         
         int id = 0;
         boolean codigoValido = false;
@@ -509,12 +510,12 @@ public class Menu {
 
         do {
             System.out.println("┌─────────────────────────────────────────────┐");
-            System.out.println("│    Menu de Produtos:                    │");
-            System.out.println("│    1 - Cadastrar Produto                │");
-            System.out.println("│    2 - Alterar Produto                  │");
-            System.out.println("│    3 - Excluir Produto                  │");
-            System.out.println("│    4 - Consultar Produto                │");
-            System.out.println("│    0 - Voltar                           │");
+            System.out.println("│    Menu de Produtos:                        │");
+            System.out.println("│    1 - Cadastrar Produto                    │");
+            System.out.println("│    2 - Alterar Produto                      │");
+            System.out.println("│    3 - Excluir Produto                      │");
+            System.out.println("│    4 - Consultar Produto                    │");
+            System.out.println("│    0 - Voltar                               │");
             System.out.println("└─────────────────────────────────────────────┘");
             opcao = scan.nextInt();
             scan.nextLine();
@@ -684,10 +685,10 @@ public class Menu {
 
     private void manutencaoEstoque(Scanner scan) {
         System.out.println("┌─────────────────────────────────────────────┐");
-        System.out.println("│    Manutenção de Estoque:               │");
-        System.out.println("│    1 - Adicionar ao Estoque             │");
-        System.out.println("│    2 - Remover do Estoque               │");
-        System.out.println("│    0 - Voltar                           │");
+        System.out.println("│    Manutenção de Estoque:                   │");
+        System.out.println("│    1 - Adicionar ao Estoque                 │");
+        System.out.println("│    2 - Remover do Estoque                   │");
+        System.out.println("│    0 - Voltar                               │");
         System.out.println("└─────────────────────────────────────────────┘");
         int opcao = scan.nextInt();
         scan.nextLine();
@@ -777,9 +778,9 @@ public class Menu {
             System.out.println("│    Menu Cliente:                            │");
             System.out.println("│    1 - Consultar Produtos                   │");
             System.out.println("│    2 - Fazer Pedido                         │");
-            System.out.println("│    3 - consulta carrinho                    │");
+            System.out.println("│    3 - consulta carrinho + fecha compra     │");
             System.out.println("│    4 - Consulta histórico de compras        │");
-            System.out.println("│    0 - Voltar                            	  │");
+            System.out.println("│    0 - Voltar                               │");
             System.out.println("└─────────────────────────────────────────────┘");
             opcao = scan.nextInt();
             scan.nextLine();
@@ -834,17 +835,17 @@ public class Menu {
     
     private void fazerPedido(Scanner scan) {
         listaProdutos();
-
-        System.out.print("Digite o nome do produto que você deseja: ");
-        String nomeProduto = scan.nextLine().toLowerCase(); 
-
+        System.out.print("Digite o nome do produto que você deseja para concluir a busca: ");
+        String nomeProduto = scan.nextLine().toLowerCase();
         List<Produto> produtosEncontrados = new ArrayList<>();
+        
+        // Busca por produtos que correspondem ao nome ou descrição fornecidos
         for (Produto produto : produtos) {
             if (produto.getNome().toLowerCase().contains(nomeProduto) || produto.getDescricao().toLowerCase().contains(nomeProduto)) {
                 produtosEncontrados.add(produto);
             }
         }
-
+        
         if (produtosEncontrados.isEmpty()) {
             System.out.println("Nenhum produto encontrado com a palavra-chave fornecida.");
         } else {
@@ -854,36 +855,62 @@ public class Menu {
                 System.out.println((i + 1) + ". ID: " + produto.getId() + " | Nome: " + produto.getNome() + " | Descricao: " + produto.getDescricao() + " | Quantidade no estoque: " + produto.getEstoque().getQuantidade());
             }
             
-            System.out.print("Digite o numero do produto que voce deseja selecionar: ");
+            System.out.print("Digite o número do produto que você deseja selecionar: ");
             int escolhaProduto = scan.nextInt();
             scan.nextLine();
-
+            
             if (escolhaProduto > 0 && escolhaProduto <= produtosEncontrados.size()) {
                 Produto produtoSelecionado = produtosEncontrados.get(escolhaProduto - 1);
-                fazerPedidoProduto(scan, produtoSelecionado);
+                
+                // Verifica se a quantidade desejada é maior que a disponível em estoque
+                int quantidadeDisponivel = produtoSelecionado.getEstoque().getQuantidade();
+                System.out.print("Quantidade desejada (disponível: " + quantidadeDisponivel + "): ");
+                int quantidadeDesejada = scan.nextInt();
+                scan.nextLine();
+                
+                if (quantidadeDesejada > quantidadeDisponivel) {
+                    System.out.println("A quantidade desejada é maior do que a quantidade disponível em estoque.");
+                    System.out.print("Deseja prosseguir com a quantidade disponível? (s/n): ");
+                    String resposta = scan.nextLine().trim().toLowerCase();
+                    
+                    if (!resposta.equals("s")) {
+                        System.out.println("Pedido cancelado.");
+                        return;
+                    }
+                    
+                    quantidadeDesejada = quantidadeDisponivel;
+                }
+                
+                fazerPedidoProduto(scan, produtoSelecionado, quantidadeDesejada);
             } else {
-                System.out.println("Escolha invalida.");
+                System.out.println("Escolha inválida.");
             }
         }
     }
 
-    private void fazerPedidoProduto(Scanner scan, Produto produto) {
+    private void fazerPedidoProduto(Scanner scan, Produto produto, int quantidadeDesejada) {
         System.out.println("Produto selecionado: " + produto.getNome());
-        System.out.print("Digite a quantidade desejada: ");
-        int quantidade = scan.nextInt();
-        scan.nextLine();
-
-        double totalItem = quantidade * produto.getPreco();
+        System.out.println("Quantidade desejada: " + quantidadeDesejada);
+        
+        double totalItem = quantidadeDesejada * produto.getPreco();
         System.out.println("Total do item: R$" + totalItem);
-
+        
         System.out.print("Confirmar pedido (S/N)? ");
         String confirmacao = scan.nextLine();
-
+        
         if (confirmacao.equalsIgnoreCase("S")) {
             Cliente cliente = criarOuBuscarCliente(scan);
-
+            
             if (cliente != null) {
-                adicionarAoCarrinho(produto, quantidade, cliente, totalItem);
+                adicionarAoCarrinho(produto, quantidadeDesejada, cliente, totalItem);
+                
+                // Atualiza o estoque somente se a quantidade desejada estiver disponível
+                if (produto.getEstoque().getQuantidade() >= quantidadeDesejada) {
+                    produto.removeEstoque(quantidadeDesejada);
+                    System.out.println("Estoque atualizado após a compra.");
+                } else {
+                    System.out.println("Erro ao atualizar estoque: quantidade solicitada maior que a disponível.");
+                }
             } else {
                 System.out.println("Erro ao criar ou buscar cliente.");
             }
@@ -1110,33 +1137,84 @@ public class Menu {
 
     private void consultarHistoricoCompras(Scanner scan) {
         System.out.println("Consultando histórico de compras:");
-
-        System.out.print("Digite o nome do cliente: ");
-        String nomeCliente = scan.nextLine();
-
+        System.out.println("Escolha uma opção:");
+        System.out.println("1 - Consultar por nome do cliente");
+        System.out.println("2 - Consultar por intervalo de datas");
+        int opcao = scan.nextInt();
+        scan.nextLine();
+        switch (opcao) {
+            case 1:
+                System.out.print("Digite o nome do cliente: ");
+                String nomeCliente = scan.nextLine();
+                consultarPorNomeCliente(nomeCliente);
+                break;
+            case 2:
+                System.out.print("Digite a data inicial (yyyy-MM-dd): ");
+                String dataInicialStr = scan.nextLine();
+                System.out.print("Digite a data final (yyyy-MM-dd): ");
+                String dataFinalStr = scan.nextLine();
+                consultarPorIntervaloDatas(dataInicialStr, dataFinalStr);
+                break;
+            default:
+                System.out.println("Opção inválida.");
+                break;
+        }
+    }
+    
+    private void consultarPorNomeCliente(String nomeCliente) {
         Cliente cliente = null;
-
         for (Pedido pedido : pedidos) {
             if (("ENTREGUE".equals(pedido.getStatus()) || "CANCELADO".equals(pedido.getStatus())) && pedido.getCliente().getNome().equalsIgnoreCase(nomeCliente)) {
                 cliente = pedido.getCliente();
                 break;
             }
         }
-
         if (cliente == null) {
             System.out.println("Histórico de compras não encontrado para o cliente '" + nomeCliente + "'.");
         } else {
-            System.out.println("Histórico de Compras para o cliente " + cliente.getNome() + ":");
+            exibirHistoricoCliente(cliente);
+        }
+    }
+    
+    private void consultarPorIntervaloDatas(String dataInicialStr, String dataFinalStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false); // Para evitar datas inválidas
+        try {
+            Date dataInicial = sdf.parse(dataInicialStr);
+            Date dataFinal = sdf.parse(dataFinalStr);
+            System.out.println("Histórico de Compras no intervalo de " + sdf.format(dataInicial) + " a " + sdf.format(dataFinal) + ":");
+            boolean encontrouPedidos = false;
             for (Pedido pedido : pedidos) {
-                if (("ENTREGUE".equals(pedido.getStatus()) || "CANCELADO".equals(pedido.getStatus())) && pedido.getCliente().equals(cliente)) {
-                    System.out.println("Pedido #" + pedido.getNumero() + " | Data: " + pedido.getDataPedido() + " | Status: " + pedido.getStatus());
-                    for (ItemPedido item : pedido.getItens()) {
-                        System.out.println("Produto: " + item.getProduto().getNome() + " | Quantidade: " + item.getQuantidade());
-                    }
-                    System.out.println("------------------------");
+                Date dataPedido = pedido.getDataPedido();
+                if (("ENTREGUE".equals(pedido.getStatus()) || "CANCELADO".equals(pedido.getStatus())) &&
+                        !dataPedido.before(dataInicial) && !dataPedido.after(dataFinal)) {
+                    encontrouPedidos = true;
+                    exibirDetalhesPedido(pedido);
                 }
             }
+            if (!encontrouPedidos) {
+                System.out.println("Nenhum pedido encontrado no intervalo de datas especificado.");
+            }
+        } catch (ParseException e) {
+            System.out.println("Formato de data inválido. Use o formato yyyy-MM-dd.");
         }
+    }
+    
+    private void exibirHistoricoCliente(Cliente cliente) {
+        System.out.println("Histórico de Compras para o cliente " + cliente.getNome() + ":");
+        for (Pedido pedido : pedidos) {
+            if (("ENTREGUE".equals(pedido.getStatus()) || "CANCELADO".equals(pedido.getStatus())) && pedido.getCliente().equals(cliente)) {
+                exibirDetalhesPedido(pedido);
+            }
+        }
+    }
+    
+    private void exibirDetalhesPedido(Pedido pedido) {
+        System.out.println("Pedido #" + pedido.getNumero() + " | Data: " + pedido.getDataPedido() + " | Status: " + pedido.getStatus());
+        for (ItemPedido item : pedido.getItens()) {
+            System.out.println("Produto: " + item.getProduto().getNome() + " | Quantidade: " + item.getQuantidade());
+        }
+        System.out.println("------------------------");
     }
 
 }
