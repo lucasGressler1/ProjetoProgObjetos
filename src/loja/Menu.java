@@ -5,6 +5,15 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Date;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import java.io.FileWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
+
+
 public class Menu {
     private List<Fornecedor> fornecedores = new ArrayList<>();
     private List<Produto> produtos = new ArrayList<>();
@@ -15,9 +24,84 @@ public class Menu {
     private int countPedidos = 0;
 
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
+    	Scanner scan = new Scanner(System.in);
         Menu menu = new Menu();
+        
+        menu.carregarDados();  // Carrega as lista gson p
         menu.menuPrincipal(scan);
+        menu.salvarDados();  // Salva os dados ao finalizar o programa
+    }
+    
+    private void salvarDados() {
+        Gson gson = new Gson();
+        
+        try (FileWriter writer = new FileWriter("fornecedores.json")) {
+            gson.toJson(fornecedores, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (FileWriter writer = new FileWriter("produtos.json")) {
+            gson.toJson(produtos, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (FileWriter writer = new FileWriter("pedidos.json")) {
+            gson.toJson(pedidos, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (FileWriter writer = new FileWriter("clientes.json")) {
+            gson.toJson(clientes, writer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void carregarDados() {
+        Gson gson = new Gson();
+        File fornecedoresFile = new File("fornecedores.json");
+        File produtosFile = new File("produtos.json");
+        File pedidosFile = new File("pedidos.json");
+        File clientesFile = new File("clientes.json");
+
+        if (fornecedoresFile.exists()) {
+            try (FileReader reader = new FileReader(fornecedoresFile)) {
+                Type listType = new TypeToken<ArrayList<Fornecedor>>() {}.getType();
+                fornecedores = gson.fromJson(reader, listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (produtosFile.exists()) {
+            try (FileReader reader = new FileReader(produtosFile)) {
+                Type listType = new TypeToken<ArrayList<Produto>>() {}.getType();
+                produtos = gson.fromJson(reader, listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (pedidosFile.exists()) {
+            try (FileReader reader = new FileReader(pedidosFile)) {
+                Type listType = new TypeToken<ArrayList<Pedido>>() {}.getType();
+                pedidos = gson.fromJson(reader, listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (clientesFile.exists()) {
+            try (FileReader reader = new FileReader(clientesFile)) {
+                Type listType = new TypeToken<ArrayList<Cliente>>() {}.getType();
+                clientes = gson.fromJson(reader, listType);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void menuPrincipal(Scanner scan) {
